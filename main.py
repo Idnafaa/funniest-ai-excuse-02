@@ -14,16 +14,23 @@ EXCUSE = (
 )
 
 
-def main() -> None:
-    line = EXCUSE.strip()
-    if not 1 <= len(line) <= 200:
-        raise ValueError(f"excuse must be 1-200 characters, got {len(line)}")
-    if "\n" in line:
+def validate(line: str) -> str:
+    """Return the line unchanged if it is a valid one-line excuse."""
+    text = line.strip()
+    if not 1 <= len(text) <= 200:
+        raise ValueError(f"excuse must be 1-200 characters, got {len(text)}")
+    if "\n" in text or "\r" in text:
         raise ValueError("excuse must be exactly one line")
+    return text
+
+
+def main() -> None:
+    line = validate(EXCUSE)
     out = Path("/output")
     out.mkdir(parents=True, exist_ok=True)
     (out / "entry.txt").write_text(line, encoding="utf-8")
     print(f"wrote {len(line)} characters to /output/entry.txt")
+    print(line)
 
 
 if __name__ == "__main__":
